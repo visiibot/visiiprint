@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Visii Print Grid</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;800&display=swap" rel="stylesheet">
+<style>
+:root{--g:#39ff14;--gd:#0c4a0c;--bg:#000;--panel:rgba(0,18,0,.82);--warn:#ff3b30}
+*{box-sizing:border-box}
+html{font-size:15px}
+body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 50% 0,#052405 0,#000 60%) #000;color:var(--g);font-family:Orbitron,'Trebuchet MS',sans-serif;font-weight:500;overflow-x:hidden}
+/* grid floor */
+.floor{position:fixed;left:0;right:0;bottom:0;height:50vh;perspective:300px;z-index:0;pointer-events:none;-webkit-mask-image:linear-gradient(transparent,#000 70%);mask-image:linear-gradient(transparent,#000 70%)}
+.floor div{position:absolute;inset:-100% -50% 0;transform:rotateX(70deg);transform-origin:50% 100%;background-image:linear-gradient(var(--g) 2px,transparent 2px),linear-gradient(90deg,var(--g) 2px,transparent 2px);background-size:60px 60px;opacity:.5}
+/* wireframe cubes */
+.scene{perspective:700px;position:absolute;pointer-events:none;opacity:.22}
+.cube{position:relative;width:var(--s);height:var(--s);transform-style:preserve-3d;transform:rotateX(-24deg) rotateY(38deg);animation:spin var(--t,60s) linear infinite}
+@keyframes spin{from{transform:rotateX(-24deg) rotateY(0)}to{transform:rotateX(-24deg) rotateY(360deg)}}
+@media(prefers-reduced-motion:reduce){.cube{animation:none}}
+.cube i{position:absolute;inset:0;border:1px solid var(--g);box-shadow:none}
+.cube i:nth-child(1){transform:translateZ(calc(var(--s)/2))}
+.cube i:nth-child(2){transform:rotateY(90deg) translateZ(calc(var(--s)/2))}
+.cube i:nth-child(3){transform:rotateY(180deg) translateZ(calc(var(--s)/2))}
+.cube i:nth-child(4){transform:rotateY(-90deg) translateZ(calc(var(--s)/2))}
+.cube i:nth-child(5){transform:rotateX(90deg) translateZ(calc(var(--s)/2))}
+.cube i:nth-child(6){transform:rotateX(-90deg) translateZ(calc(var(--s)/2))}
+.cube .cube{position:absolute;left:25%;top:25%;--s:50%;width:50%;height:50%;animation-direction:reverse}
+header{position:relative;z-index:1;text-align:center;padding:36px 12px 14px}
+h1{margin:0;font-size:clamp(1.6rem,6vw,3.2rem);font-weight:800;letter-spacing:.12em;text-shadow:0 0 6px var(--g),0 0 22px var(--g),0 0 44px #0a0}
+header p{margin:10px auto 0;max-width:560px;font-size:.8rem;opacity:.85}
+main{position:relative;z-index:1;max-width:1100px;margin:0 auto;padding:10px 12px 60px}
+.panel{background:var(--panel);border:1px solid var(--g);box-shadow:0 0 14px #39ff1466,inset 0 0 18px #39ff1422;padding:16px;margin-bottom:22px;clip-path:polygon(14px 0,100% 0,100% calc(100% - 14px),calc(100% - 14px) 100%,0 100%,0 14px)}
+h2{margin:0 0 12px;font-size:1rem;letter-spacing:.1em;text-shadow:0 0 8px var(--g)}
+label{display:block;font-size:.68rem;margin-bottom:4px;opacity:.85}
+input,select{font:inherit;font-size:.8rem;width:100%;padding:9px;background:#000;color:var(--g);border:1px solid var(--g);box-shadow:inset 0 0 8px #39ff1433}
+input:focus,select:focus,button:focus-visible{outline:2px solid #fff;box-shadow:0 0 12px var(--g)}
+.row{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end}
+.row>div{flex:1 1 140px}
+button{font:inherit;font-size:.72rem;cursor:pointer;color:var(--g);background:transparent;border:1px solid var(--g);padding:9px 12px;letter-spacing:.08em;box-shadow:0 0 8px #39ff1455}
+button:hover:not(:disabled){background:var(--g);color:#000;box-shadow:0 0 18px var(--g)}
+button.bad{color:var(--warn);border-color:var(--warn);box-shadow:0 0 8px #ff3b3055}
+button.bad:hover:not(:disabled){background:var(--warn);color:#000;box-shadow:0 0 18px var(--warn)}
+button:disabled{opacity:.35;cursor:not-allowed;box-shadow:none}
+#me{display:none;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.nav{display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:14px;flex-wrap:wrap}
+.nav b{min-width:210px;text-align:center;font-size:.85rem}
+.tag{font-size:.65rem;border:1px solid var(--g);padding:2px 6px;margin-left:6px}
+.tag.past{color:#ffb300;border-color:#ffb300}
+.week{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+@media(max-width:900px){.week{grid-template-columns:1fr}}
+.day{border:1px solid var(--gd);background:#010a01;padding:10px;display:flex;flex-direction:column;gap:10px}
+.day.mine{border-color:var(--g);box-shadow:0 0 14px var(--g)}
+.day h3{margin:0;font-size:.9rem;text-align:center;border-bottom:1px solid var(--gd);padding-bottom:6px}
+.pr{border:1px solid var(--gd);padding:8px;display:flex;flex-direction:column;gap:6px}
+.pr.mine{border-color:var(--g);background:#39ff1418}
+.pr h4{margin:0;font-size:.75rem;display:flex;justify-content:space-between;align-items:center}
+.spots{display:flex;gap:4px}
+.spot{width:11px;height:11px;border:1px solid var(--g)}
+.spot.on{background:var(--g);box-shadow:0 0 6px var(--g)}
+.chip{font-size:.68rem;padding:3px 6px;border-left:3px solid var(--g);background:#39ff1412;overflow-wrap:anywhere}
+.chip.me{background:var(--g);color:#000;font-weight:800}
+.empty{font-size:.65rem;opacity:.5}
+.pr button{font-size:.62rem;padding:6px}
+.note{font-size:.7rem;opacity:.75;margin:0 0 12px}
+#toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);max-width:92vw;background:#000;border:1px solid var(--g);box-shadow:0 0 18px var(--g);padding:12px 16px;font-size:.8rem;display:none;z-index:9}
+#toast.err{color:var(--warn);border-color:var(--warn);box-shadow:0 0 18px var(--warn)}
+table{width:100%;border-collapse:collapse;font-size:.72rem}
+th,td{border:1px solid var(--gd);padding:6px;text-align:left}
+th{background:#39ff1418}
+td input{padding:5px;font-size:.72rem}
+.scroll{overflow-x:auto;margin-bottom:12px}
+.pin{letter-spacing:.2em}
+.caps{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:8px;margin-bottom:6px}
+h2.sp{margin-top:18px}
+</style>
+</head>
+<body>
+<div class="floor"><div></div></div>
+<div class="scene" style="left:3%;top:40px"><div class="cube" style="--s:90px"><i></i><i></i><i></i><i></i><i></i><i></i><div class="cube"><i></i><i></i><i></i><i></i><i></i><i></i></div></div></div>
+<div class="scene" style="right:4%;top:70px"><div class="cube" style="--s:64px;--t:48s"><i></i><i></i><i></i><i></i><i></i><i></i><div class="cube"><i></i><i></i><i></i><i></i><i></i><i></i></div></div></div>
+<div class="scene" style="right:12%;top:360px"><div class="cube" style="--s:46px;--t:42s"><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+<div class="scene" style="left:7%;top:420px"><div class="cube" style="--s:38px;--t:75s"><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+
+<header>
+  <h1>VISII PRINT GRID</h1>
+  <p>Two printers. One afternoon each week. Share the machines, help a friend, build something great.</p>
+</header>
+<main>
+  <section class="panel" id="loginPanel">
+    <h2>USER LOGIN</h2>
+    <div class="row">
+      <div><label for="who">Username</label><select id="who"><option>Loading...</option></select></div>
+      <div><label for="pin">4-digit PIN</label><input id="pin" type="password" inputmode="numeric" maxlength="4" autocomplete="off"></div>
+      <div style="flex:0 0 auto"><button id="loginBtn">Log in</button></div>
+    </div>
+  </section>
+  <section class="panel" id="me"><div id="meText"></div><button id="logoutBtn">Log out</button></section>
+
+  <section class="panel">
+    <h2>PRINTER SCHEDULE</h2>
+    <p class="note">Pick Gooper or Squirt for one afternoon. Green blocks are taken spots. Use the arrows to look back at past weeks.</p>
+    <div class="nav"><button id="prev" aria-label="Previous week">&lt; Older</button><b id="weekLbl"></b><button id="next" aria-label="Next week">Newer &gt;</button></div>
+    <div class="week" id="week"></div>
+  </section>
+
+  <section class="panel">
+    <h2>TEACHER PORTAL</h2>
+    <div id="tLock">
+      <div class="row">
+        <div><label for="tpass" id="tpassLabel">Passphrase</label><input id="tpass" type="password" autocomplete="off"></div>
+        <div style="flex:0 0 auto"><button id="tBtn">Unlock</button></div>
+      </div>
+    </div>
+    <div id="tBody" style="display:none"></div>
+  </section>
+</main>
+<div id="toast"></div>
+
+<script>
+// Paste your deployed Apps Script web app URL (ends in /exec) here:
+const DEFAULT_API_URL = 'https://script.google.com/macros/s/AKfycbyZtA9QOUuw0F0DcnJnODREDv48Q4sonn9e_3wl2zpi8YtvNLEo7DZAfxI72hcaMC1h/exec';
+const FULL = {Mon:'Monday',Tue:'Tuesday',Wed:'Wednesday',Thu:'Thursday',Fri:'Friday'};
+const $ = id => document.getElementById(id);
+let sched = null, me = null, tpass = null, tdata = null;
+
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function toast(msg, err){const t=$('toast');t.textContent=msg;t.className=err?'err':'';t.style.display='block';clearTimeout(toast.h);toast.h=setTimeout(()=>t.style.display='none',3200);}
+async function api(action, p = {}){
+  const r = await fetch(DEFAULT_API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action,...p})});
+  const j = await r.json();
+  if(!j.ok) throw new Error(j.error);
+  return j.data;
+}
+async function run(fn){try{await fn();}catch(e){toast(e.message||'Something went wrong. Try again.',true);}}
+function fmtWeek(w){const [y,m,d]=w.split('-').map(Number);return new Date(y,m-1,d).toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric'});}
+function dayDate(w,i){const [y,m,d]=w.split('-').map(Number);return new Date(y,m-1,d+i).toLocaleDateString(undefined,{month:'short',day:'numeric'});}
+
+/* ---------- schedule ---------- */
+function setSched(s){
+  sched = s;
+  $('who').innerHTML = '<option value="">Choose your name</option>' + s.students.map(n=>`<option>${esc(n)}</option>`).join('');
+  if(me) $('who').value = me.name;
+  renderWeek();
+}
+function mySlot(){
+  if(!me||!sched) return null;
+  for(const d of sched.days) for(const p of d.printers) if(p.names.some(n=>n.toLowerCase()===me.name.toLowerCase())) return {day:d.day,printer:p.printer};
+  return null;
+}
+function renderWeek(){
+  const live = sched.week === sched.current, i = sched.weeks.indexOf(sched.week);
+  $('weekLbl').innerHTML = 'WEEK OF ' + esc(fmtWeek(sched.week)) + (live ? '<span class="tag">THIS WEEK</span>' : '<span class="tag past">ARCHIVE</span>');
+  $('prev').disabled = i <= 0; $('next').disabled = i >= sched.weeks.length-1;
+  const mine = live ? mySlot() : null;
+  $('week').innerHTML = sched.days.map((d,di)=>`<div class="day ${mine&&mine.day===d.day?'mine':''}"><h3>${d.day}<br><small>${dayDate(sched.week,di)}</small></h3>` +
+    d.printers.map(p=>{
+      const isMine = mine && mine.day===d.day && mine.printer===p.printer;
+      const spots = Array.from({length:Math.max(p.cap,p.names.length)},(_,k)=>`<span class="spot ${k<p.names.length?'on':''}"></span>`).join('');
+      const names = p.names.length ? p.names.map(n=>`<div class="chip ${me&&n.toLowerCase()===me.name.toLowerCase()?'me':''}">${esc(n)}</div>`).join('') : `<div class="empty">${p.cap?'Open':'Closed'}</div>`;
+      let btn = '';
+      if(me && live){
+        if(isMine) btn = `<button class="bad" data-leave>Leave</button>`;
+        else if(p.cap<=0) btn = `<button disabled>Closed</button>`;
+        else if(p.names.length>=p.cap) btn = `<button disabled>Full</button>`;
+        else btn = `<button data-join="${d.day}|${p.printer}">${mine?'Move here':'Join'}</button>`;
+      }
+      return `<div class="pr ${isMine?'mine':''}"><h4>${p.printer.toUpperCase()}<span class="spots">${spots}</span></h4>${names}${btn}</div>`;
+    }).join('') + `</div>`).join('');
+  $('loginPanel').style.display = me ? 'none' : '';
+  $('me').style.display = me ? 'flex' : 'none';
+  if(me){ const m = mySlot(); $('meText').innerHTML = `Hi, <b>${esc(me.name)}</b>. ` + (m ? `You have <b>${esc(m.printer)}</b> on <b>${FULL[m.day]}</b>.` : 'Pick a printer and afternoon below.'); }
+}
+async function goWeek(w){ setSched(await api('getSchedule',{week:w})); }
+$('prev').onclick = () => run(()=>goWeek(sched.weeks[sched.weeks.indexOf(sched.week)-1]));
+$('next').onclick = () => run(()=>goWeek(sched.weeks[sched.weeks.indexOf(sched.week)+1]));
+
+$('loginBtn').onclick = () => run(async()=>{
+  const name=$('who').value, pin=$('pin').value;
+  if(!name) throw new Error('Choose your username first.');
+  const s = await api('login',{name,pin});
+  me={name,pin}; $('pin').value=''; setSched(s);
+});
+$('pin').addEventListener('keydown',e=>{if(e.key==='Enter')$('loginBtn').click();});
+$('logoutBtn').onclick = () => {me=null;renderWeek();};
+$('week').onclick = e => {
+  const b = e.target.closest('button'); if(!b||b.disabled) return;
+  if(b.dataset.join){ const [day,printer]=b.dataset.join.split('|'); run(async()=>{setSched(await api('signup',{...me,day,printer}));toast('Locked in: '+printer+' on '+FULL[day]+'.');}); }
+  if('leave' in b.dataset) run(async()=>{setSched(await api('cancel',me));toast('You left the schedule.');});
+};
+
+/* ---------- teacher ---------- */
+async function tInit(){
+  const s = await api('teacherStatus');
+  $('tpassLabel').textContent = s.hasPass ? 'Passphrase' : 'First time: choose a passphrase';
+  $('tBtn').textContent = s.hasPass ? 'Unlock' : 'Set passphrase';
+  $('tBtn').dataset.setup = s.hasPass ? '' : '1';
+}
+$('tBtn').onclick = () => run(async()=>{
+  const pass = $('tpass').value;
+  tdata = await api($('tBtn').dataset.setup ? 'teacherSetup' : 'teacherLogin',{pass});
+  tpass = pass; $('tpass').value=''; $('tLock').style.display='none'; $('tBody').style.display='block';
+  renderT();
+});
+$('tpass').addEventListener('keydown',e=>{if(e.key==='Enter')$('tBtn').click();});
+async function tCall(action, p, msg){
+  tdata = await api(action,{pass:tpass,...p});
+  if(sched.week===sched.current) setSched(tdata); renderT(); if(msg) toast(msg);
+}
+function renderT(){
+  const prs = tdata.days[0].printers.map(p=>p.printer);
+  $('tBody').innerHTML = `
+    <h2>SPOTS PER PRINTER (0 = CLOSED)</h2>
+    <div class="caps">${tdata.days.flatMap(d=>d.printers.map(p=>`<div><label>${d.day} ${p.printer}</label><input type="number" min="0" max="20" value="${p.cap}" data-cap="${d.day}|${p.printer}"></div>`)).join('')}</div>
+    <p class="note">Change a number, then press Tab or click away to save.</p>
+
+    <h2 class="sp">EDIT THIS WEEK</h2>
+    <div class="row">
+      <div><label>Student</label><select id="aName">${tdata.roster.map(s=>`<option>${esc(s.name)}</option>`).join('')}</select></div>
+      <div><label>Day</label><select id="aDay"><option value="">(remove from schedule)</option>${tdata.days.map(d=>`<option value="${d.day}">${FULL[d.day]}</option>`).join('')}</select></div>
+      <div><label>Printer</label><select id="aPr">${prs.map(p=>`<option>${p}</option>`).join('')}</select></div>
+      <div style="flex:0 0 auto"><button id="aBtn">Apply</button></div>
+    </div>
+    <p class="note" style="margin-top:8px">Teacher changes ignore the spot limit.</p>
+
+    <h2 class="sp">STUDENTS</h2>
+    <div class="scroll"><table>
+      <tr><th>Username</th><th>PIN</th><th>Total sign-ups</th><th>This week</th><th>New PIN</th></tr>
+      ${tdata.roster.map(s=>`<tr><td>${esc(s.name)}</td><td class="pin">${esc(s.pin)}</td><td>${s.total}</td><td>${esc(s.slot||'-')}</td>
+        <td><div class="row" style="flex-wrap:nowrap"><input maxlength="4" inputmode="numeric" style="width:80px" data-np="${esc(s.name)}"><button data-reset="${esc(s.name)}">Reset</button></div></td></tr>`).join('')}
+    </table></div>
+
+    <h2 class="sp">ADD A USERNAME</h2>
+    <div class="row">
+      <div><label>Username</label><input id="nName" maxlength="24"></div>
+      <div><label>PIN (blank = random)</label><input id="nPin" maxlength="4" inputmode="numeric"></div>
+      <div style="flex:0 0 auto"><button id="nBtn">Add</button></div>
+    </div>
+    <div style="margin-top:18px"><button id="tOut">Lock teacher portal</button></div>`;
+}
+$('tBody').onchange = e => { const i=e.target.closest('[data-cap]'); if(i){ const [day,printer]=i.dataset.cap.split('|'); run(()=>tCall('teacherSetCap',{day,printer,cap:i.value},'Saved.')); } };
+$('tBody').onclick = e => {
+  const b = e.target.closest('button'); if(!b) return;
+  if(b.id==='aBtn') run(()=>tCall('teacherAssign',{name:$('aName').value,day:$('aDay').value,printer:$('aPr').value},'Schedule updated.'));
+  if(b.id==='nBtn') run(()=>tCall('teacherAddStudent',{name:$('nName').value,pin:$('nPin').value},'Username added.'));
+  if(b.id==='tOut'){tpass=null;tdata=null;$('tBody').style.display='none';$('tLock').style.display='';tInit();}
+  if(b.dataset.reset){
+    const inp = [...document.querySelectorAll('[data-np]')].find(x=>x.dataset.np===b.dataset.reset);
+    run(()=>tCall('teacherResetPin',{name:b.dataset.reset,newPin:inp.value},'PIN reset for '+b.dataset.reset+'.'));
+  }
+};
+
+run(async()=>{ setSched(await api('getSchedule')); await tInit(); });
+</script>
+</body>
+</html>

@@ -9,6 +9,14 @@ var DEFAULT_CAP = 2; // students who can share one printer on one afternoon
 var START_NAMES = ['Avi','Rana','Aidan','Seren','David','Elin','Amelia','Nova','Anaya','Daniel',
   'Taya','Jacxson','Darien','Mae-Lou','Benny','Leith','Ronan','Sol','Elliott','Charlie'];
 
+var DEFAULT_POLICY = [
+  '1. Be mindful of waste and treat the machines with respect.',
+  '2. 3D printers can be used after 1PM. Overnight prints are fine.',
+  '3. When you are first learning, it is OK to print .stl plans sourced from the web.',
+  '4. Once you are fluent with the tech, we are expecting that you design your own prints.',
+  '5. Weekly print limit: TBD'
+].join('\n');
+
 function setup() {
   var st = tab_('Students', ['Name', 'PIN', 'Total', 'FailCount', 'LockUntil']);
   st.getRange('B:B').setNumberFormat('@');
@@ -65,6 +73,13 @@ var ACTIONS = {
     return teacherData_();
   },
   teacherLogin: function (r) { teacher_(r); return teacherData_(); },
+  teacherSetPolicy: function (r) {
+    teacher_(r);
+    var t = String(r.text || '');
+    if (t.length > 3000) throw new Error('Policy is too long (3000 characters max).');
+    setCfg_('PolicyText', t);
+    return teacherData_();
+  },
   teacherSetCap: function (r) {
     teacher_(r);
     var n = Number(r.cap);
@@ -194,6 +209,7 @@ function schedule_(week) {
   return {
     week: wk.slice(1),
     current: cur.slice(1),
+    policy: cfg_('PolicyText') || DEFAULT_POLICY,
     weeks: Object.keys(seen).sort().map(function (w) { return w.slice(1); }),
     students: rows_(sh_('Students')).map(function (s) { return s.Name; }),
     days: DAYS.map(function (d) {

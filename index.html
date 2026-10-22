@@ -3,41 +3,28 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Visii Print Grid</title>
+<title>Visii Print Hub</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;800&display=swap" rel="stylesheet">
 <style>
-:root{--g:#39ff14;--gd:#0c4a0c;--bg:#000;--panel:rgba(0,18,0,.82);--warn:#ff3b30}
+:root{--g:#ffe9a0;--gd:#4d4318;--bg:#000;--panel:rgba(22,18,2,.82);--warn:#ff3b30}
 *{box-sizing:border-box}
 html{font-size:15px}
-body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 50% 0,#052405 0,#000 60%) #000;color:var(--g);font-family:Orbitron,'Trebuchet MS',sans-serif;font-weight:500;overflow-x:hidden}
+body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 50% 0,#2a2308 0,#000 60%) #000;color:var(--g);font-family:Orbitron,'Trebuchet MS',sans-serif;font-weight:500;overflow-x:hidden}
 /* grid floor */
 .floor{position:fixed;left:0;right:0;bottom:0;height:50vh;perspective:300px;z-index:0;pointer-events:none;-webkit-mask-image:linear-gradient(transparent,#000 70%);mask-image:linear-gradient(transparent,#000 70%)}
 .floor div{position:absolute;inset:-100% -50% 0;transform:rotateX(70deg);transform-origin:50% 100%;background-image:linear-gradient(var(--g) 2px,transparent 2px),linear-gradient(90deg,var(--g) 2px,transparent 2px);background-size:60px 60px;opacity:.5}
-/* wireframe cubes */
-.scene{perspective:700px;position:absolute;pointer-events:none;opacity:.22}
-.cube{position:relative;width:var(--s);height:var(--s);transform-style:preserve-3d;transform:rotateX(-24deg) rotateY(38deg);animation:spin var(--t,60s) linear infinite}
-@keyframes spin{from{transform:rotateX(-24deg) rotateY(0)}to{transform:rotateX(-24deg) rotateY(360deg)}}
-@media(prefers-reduced-motion:reduce){.cube{animation:none}}
-.cube i{position:absolute;inset:0;border:1px solid var(--g);box-shadow:none}
-.cube i:nth-child(1){transform:translateZ(calc(var(--s)/2))}
-.cube i:nth-child(2){transform:rotateY(90deg) translateZ(calc(var(--s)/2))}
-.cube i:nth-child(3){transform:rotateY(180deg) translateZ(calc(var(--s)/2))}
-.cube i:nth-child(4){transform:rotateY(-90deg) translateZ(calc(var(--s)/2))}
-.cube i:nth-child(5){transform:rotateX(90deg) translateZ(calc(var(--s)/2))}
-.cube i:nth-child(6){transform:rotateX(-90deg) translateZ(calc(var(--s)/2))}
-.cube .cube{position:absolute;left:25%;top:25%;--s:50%;width:50%;height:50%;animation-direction:reverse}
 header{position:relative;z-index:1;text-align:center;padding:36px 12px 14px}
-h1{margin:0;font-size:clamp(1.6rem,6vw,3.2rem);font-weight:800;letter-spacing:.12em;text-shadow:0 0 6px var(--g),0 0 22px var(--g),0 0 44px #0a0}
+h1{margin:0;font-size:clamp(1.6rem,6vw,3.2rem);font-weight:800;letter-spacing:.12em;text-shadow:0 0 6px var(--g),0 0 22px var(--g),0 0 44px #a88a20}
 header p{margin:10px auto 0;max-width:560px;font-size:.8rem;opacity:.85}
 main{position:relative;z-index:1;max-width:1100px;margin:0 auto;padding:10px 12px 60px}
-.panel{background:var(--panel);border:1px solid var(--g);box-shadow:0 0 14px #39ff1466,inset 0 0 18px #39ff1422;padding:16px;margin-bottom:22px;clip-path:polygon(14px 0,100% 0,100% calc(100% - 14px),calc(100% - 14px) 100%,0 100%,0 14px)}
+.panel{background:var(--panel);border:1px solid var(--g);box-shadow:0 0 14px #ffe9a066,inset 0 0 18px #ffe9a022;padding:16px;margin-bottom:22px;clip-path:polygon(14px 0,100% 0,100% calc(100% - 14px),calc(100% - 14px) 100%,0 100%,0 14px)}
 h2{margin:0 0 12px;font-size:1rem;letter-spacing:.1em;text-shadow:0 0 8px var(--g)}
 label{display:block;font-size:.68rem;margin-bottom:4px;opacity:.85}
-input,select{font:inherit;font-size:.8rem;width:100%;padding:9px;background:#000;color:var(--g);border:1px solid var(--g);box-shadow:inset 0 0 8px #39ff1433}
+input,select{font:inherit;font-size:.8rem;width:100%;padding:9px;background:#000;color:var(--g);border:1px solid var(--g);box-shadow:inset 0 0 8px #ffe9a033}
 input:focus,select:focus,button:focus-visible{outline:2px solid #fff;box-shadow:0 0 12px var(--g)}
 .row{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end}
 .row>div{flex:1 1 140px}
-button{font:inherit;font-size:.72rem;cursor:pointer;color:var(--g);background:transparent;border:1px solid var(--g);padding:9px 12px;letter-spacing:.08em;box-shadow:0 0 8px #39ff1455}
+button{font:inherit;font-size:.72rem;cursor:pointer;color:var(--g);background:transparent;border:1px solid var(--g);padding:9px 12px;letter-spacing:.08em;box-shadow:0 0 8px #ffe9a055}
 button:hover:not(:disabled){background:var(--g);color:#000;box-shadow:0 0 18px var(--g)}
 button.bad{color:var(--warn);border-color:var(--warn);box-shadow:0 0 8px #ff3b3055}
 button.bad:hover:not(:disabled){background:var(--warn);color:#000;box-shadow:0 0 18px var(--warn)}
@@ -49,16 +36,16 @@ button:disabled{opacity:.35;cursor:not-allowed;box-shadow:none}
 .tag.past{color:#ffb300;border-color:#ffb300}
 .week{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
 @media(max-width:900px){.week{grid-template-columns:1fr}}
-.day{border:1px solid var(--gd);background:#010a01;padding:10px;display:flex;flex-direction:column;gap:10px}
+.day{border:1px solid var(--gd);background:#0b0900;padding:10px;display:flex;flex-direction:column;gap:10px}
 .day.mine{border-color:var(--g);box-shadow:0 0 14px var(--g)}
 .day h3{margin:0;font-size:.9rem;text-align:center;border-bottom:1px solid var(--gd);padding-bottom:6px}
 .pr{border:1px solid var(--gd);padding:8px;display:flex;flex-direction:column;gap:6px}
-.pr.mine{border-color:var(--g);background:#39ff1418}
+.pr.mine{border-color:var(--g);background:#ffe9a018}
 .pr h4{margin:0;font-size:.75rem;display:flex;justify-content:space-between;align-items:center}
 .spots{display:flex;gap:4px}
 .spot{width:11px;height:11px;border:1px solid var(--g)}
 .spot.on{background:var(--g);box-shadow:0 0 6px var(--g)}
-.chip{font-size:.68rem;padding:3px 6px;border-left:3px solid var(--g);background:#39ff1412;overflow-wrap:anywhere}
+.chip{font-size:.68rem;padding:3px 6px;border-left:3px solid var(--g);background:#ffe9a012;overflow-wrap:anywhere}
 .chip.me{background:var(--g);color:#000;font-weight:800}
 .empty{font-size:.65rem;opacity:.5}
 .pr button{font-size:.62rem;padding:6px}
@@ -67,24 +54,26 @@ button:disabled{opacity:.35;cursor:not-allowed;box-shadow:none}
 #toast.err{color:var(--warn);border-color:var(--warn);box-shadow:0 0 18px var(--warn)}
 table{width:100%;border-collapse:collapse;font-size:.72rem}
 th,td{border:1px solid var(--gd);padding:6px;text-align:left}
-th{background:#39ff1418}
+th{background:#ffe9a018}
 td input{padding:5px;font-size:.72rem}
 .scroll{overflow-x:auto;margin-bottom:12px}
 .pin{letter-spacing:.2em}
 .caps{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:8px;margin-bottom:6px}
 h2.sp{margin-top:18px}
+canvas.shape{position:absolute;pointer-events:none;opacity:.3}
 </style>
 </head>
 <body>
 <div class="floor"><div></div></div>
-<div class="scene" style="left:3%;top:40px"><div class="cube" style="--s:90px"><i></i><i></i><i></i><i></i><i></i><i></i><div class="cube"><i></i><i></i><i></i><i></i><i></i><i></i></div></div></div>
-<div class="scene" style="right:4%;top:70px"><div class="cube" style="--s:64px;--t:48s"><i></i><i></i><i></i><i></i><i></i><i></i><div class="cube"><i></i><i></i><i></i><i></i><i></i><i></i></div></div></div>
-<div class="scene" style="right:12%;top:360px"><div class="cube" style="--s:46px;--t:42s"><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
-<div class="scene" style="left:7%;top:420px"><div class="cube" style="--s:38px;--t:75s"><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+
+<canvas class="shape" data-shape="icosa" style="left:3%;top:40px;width:140px;height:140px"></canvas>
+<canvas class="shape" data-shape="sphere" style="right:4%;top:70px;width:120px;height:120px"></canvas>
+<canvas class="shape" data-shape="tetra" style="right:12%;top:360px;width:110px;height:110px"></canvas>
+<canvas class="shape" data-shape="octa" style="left:7%;top:420px;width:110px;height:110px"></canvas>
 
 <header>
-  <h1>VISII PRINT GRID</h1>
-  <p>Two printers. One afternoon each week. Share the machines, help a friend, build something great.</p>
+  <h1>VISII PRINT HUB</h1>
+  <p>VISII 3D printer sign-up hub. Let's build something great.</p>
 </header>
 <main>
   <section class="panel" id="loginPanel">
@@ -99,7 +88,7 @@ h2.sp{margin-top:18px}
 
   <section class="panel">
     <h2>PRINTER SCHEDULE</h2>
-    <p class="note">Pick Gooper or Squirt for one afternoon. Green blocks are taken spots. Use the arrows to look back at past weeks.</p>
+    <p class="note">Pick Gooper or Squirt for one afternoon. Lit blocks are taken spots. Use the arrows to look back at past weeks.</p>
     <div class="nav"><button id="prev" aria-label="Previous week">&lt; Older</button><b id="weekLbl"></b><button id="next" aria-label="Next week">Newer &gt;</button></div>
     <div class="week" id="week"></div>
   </section>
@@ -119,7 +108,7 @@ h2.sp{margin-top:18px}
 
 <script>
 // Paste your deployed Apps Script web app URL (ends in /exec) here:
-const DEFAULT_API_URL = 'https://script.google.com/macros/s/AKfycbyZtA9QOUuw0F0DcnJnODREDv48Q4sonn9e_3wl2zpi8YtvNLEo7DZAfxI72hcaMC1h/exec';
+const DEFAULT_API_URL = 'PASTE_APPS_SCRIPT_EXEC_URL_HERE';
 const FULL = {Mon:'Monday',Tue:'Tuesday',Wed:'Wednesday',Thu:'Thursday',Fri:'Friday'};
 const $ = id => document.getElementById(id);
 let sched = null, me = null, tpass = null, tdata = null;
@@ -163,7 +152,7 @@ function renderWeek(){
         if(isMine) btn = `<button class="bad" data-leave>Leave</button>`;
         else if(p.cap<=0) btn = `<button disabled>Closed</button>`;
         else if(p.names.length>=p.cap) btn = `<button disabled>Full</button>`;
-        else btn = `<button data-join="${d.day}|${p.printer}">${mine?'Move here':'Join'}</button>`;
+        else btn = `<button data-join="${d.day}|${p.printer}">${mine?'Move here':'Claim'}</button>`;
       }
       return `<div class="pr ${isMine?'mine':''}"><h4>${p.printer.toUpperCase()}<span class="spots">${spots}</span></h4>${names}${btn}</div>`;
     }).join('') + `</div>`).join('');
@@ -251,6 +240,45 @@ $('tBody').onclick = e => {
 };
 
 run(async()=>{ setSched(await api('getSchedule')); await tInit(); });
+</script>
+<script>
+/* slowly rotating wireframe shapes (drawn on canvas) */
+(function(){
+  const reduce = matchMedia('(prefers-reduced-motion:reduce)').matches;
+  const edgesAll = n => { const e=[]; for(let i=0;i<n;i++) for(let j=i+1;j<n;j++) e.push([i,j]); return e; };
+  const ring = (f, n, v, e) => { const b=v.length; for(let k=0;k<n;k++){ v.push(f(k/n*Math.PI*2)); e.push([b+k, b+(k+1)%n]); } };
+  function icosa(){ const f=(1+Math.sqrt(5))/2, v=[];
+    [-1,1].forEach(a=>[-1,1].forEach(b=>{ v.push([0,a,b*f],[a,b*f,0],[b*f,0,a]); }));
+    const e=[]; for(let i=0;i<12;i++) for(let j=i+1;j<12;j++){ const d=v[i].reduce((t,c,k)=>t+(c-v[j][k])**2,0); if(Math.abs(d-4)<.01) e.push([i,j]); }
+    return {v,e,u:.14,sp:.11}; }
+  function sphere(){ const v=[],e=[];
+    [0,.6,-.6,1.1,-1.1].forEach(lat=>ring(t=>[Math.cos(lat)*Math.cos(t),Math.sin(lat),Math.cos(lat)*Math.sin(t)],28,v,e));
+    [0,Math.PI/3,2*Math.PI/3].forEach(m=>ring(t=>[Math.cos(t)*Math.cos(m),Math.sin(t),Math.cos(t)*Math.sin(m)],28,v,e));
+    return {v,e,u:.3,sp:.09}; }
+  const tetra = () => ({v:[[1,1,1],[1,-1,-1],[-1,1,-1],[-1,-1,1]], e:edgesAll(4), u:.17, sp:.13});
+  const octa = () => ({v:[[1,0,0],[-1,0,0],[0,1,0],[0,-1,0],[0,0,1],[0,0,-1]], e:edgesAll(6).filter(([i,j])=>(i>>1)!==(j>>1)), u:.3, sp:.1});
+  const make = {icosa, sphere, tetra, octa};
+  const rot = (p,i,j,a) => { const c=Math.cos(a), s=Math.sin(a), x=p[i], y=p[j]; p[i]=x*c-y*s; p[j]=x*s+y*c; };
+  const cvs = [...document.querySelectorAll('canvas.shape')];
+  const dpr = Math.min(window.devicePixelRatio||1, 2);
+  cvs.forEach(c => { c._s = make[c.dataset.shape](); c.width = c.clientWidth*dpr; c.height = c.clientHeight*dpr; });
+  function draw(t){
+    cvs.forEach(c => {
+      const sh=c._s, W=c.width, x=c.getContext('2d'), a=t*sh.sp;
+      x.clearRect(0,0,W,W); x.strokeStyle='#ff9aa8'; x.lineWidth=Math.max(1,W/120); x.lineJoin='round';
+      const P = sh.v.map(v => {
+        const p=v.slice();
+        if(p.length===4){ rot(p,0,3,a*1.3); rot(p,2,3,a*.8); const k=2.2/(2.6-p[3]); p[0]*=k; p[1]*=k; p[2]*=k; p.length=3; }
+        rot(p,0,2,a); rot(p,1,2,a*.45+.5);
+        const k=5/(5-p[2]);
+        return [W/2+p[0]*k*sh.u*W, W/2-p[1]*k*sh.u*W];
+      });
+      x.beginPath(); sh.e.forEach(([i,j])=>{ x.moveTo(P[i][0],P[i][1]); x.lineTo(P[j][0],P[j][1]); }); x.stroke();
+    });
+    if(!reduce) requestAnimationFrame(f=>draw(f/1000));
+  }
+  draw(0);
+})();
 </script>
 </body>
 </html>
